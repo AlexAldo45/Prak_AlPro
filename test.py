@@ -1,116 +1,79 @@
+class Makanan:
+    def __init__(self, nama, kalori):
+        self.nama = nama
+        self.kalori = kalori
+        self.next = None
 
-import java.util.Scanner;
 
-class Makanan {
-    String nama;
-    int kalori;
-    Makanan next;
+class Stack:
+    def __init__(self):
+        self.top = None
 
-    public Makanan(String nama, int kalori) {
-        this.nama = nama;
-        this.kalori = kalori;
-        this.next = null;
-    }
-}
+    def is_empty(self):
+        return self.top is None
 
-class Stack {
-    Makanan top;
+    def push(self, nama, kalori):
+        new_makanan = Makanan(nama, kalori)
+        if self.is_empty():
+            self.top = new_makanan
+        else:
+            new_makanan.next = self.top
+            self.top = new_makanan
 
-    public Stack() {
-        this.top = null;
-    }
+    def pop(self):
+        if self.is_empty():
+            print("Stack is empty!")
+        else:
+            print(f"Data {self.top.nama} ({self.top.kalori} kal) discarded!")
+            self.top = self.top.next
 
-    public boolean isEmpty() {
-        return top == null;
-    }
+    def print_history(self):
+        if self.is_empty():
+            print("No data available.")
+        else:
+            current = self.top
+            while current:
+                print(f"Data {current.nama} ({current.kalori} kal)")
+                current = current.next
 
-    public void push(String nama, int kalori) {
-        Makanan newMakanan = new Makanan(nama, kalori);
-        if (isEmpty()) {
-            top = newMakanan;
-        } else {
-            newMakanan.next = top;
-            top = newMakanan;
-        }
-    }
 
-    public void pop() {
-        if (isEmpty()) {
-            System.out.println("Stack is empty!");
-        } else {
-            System.out.println("Data " + top.nama + " (" + top.kalori + " kal) discarded!");
-            top = top.next;
-        }
-    }
+stack = Stack()
 
-    public void printHistory() {
-        if (isEmpty()) {
-            System.out.println("No data available.");
-        } else {
-            Makanan current = top;
-            while (current != null) {
-                System.out.println("Data " + current.nama + " (" + current.kalori + " kal)");
-                current = current.next;
-            }
-        }
-    }
-}
+jenis_kelamin = int(input("Pilih Jenis Kelamin:\n1. Pria\n2. Wanita\nPilihan Anda : "))
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Stack stack = new Stack();
+if jenis_kelamin == 1:
+    batas_kalori = 2000
+else:
+    batas_kalori = 1500
 
-        int jenisKelamin;
-        int batasKalori;
-        int totalKalori = 0;
+total_kalori = 0
 
-        System.out.println("Pilih Jenis Kelamin:\n1. Pria\n2. Wanita");
-        System.out.print("Pilihan Anda : ");
-        jenisKelamin = scanner.nextInt();
+while True:
+    print(f"\nPilih Menu:\n1. Makan\n2. Buang\n3. Riwayat Makanan\n4. Keluar\nKalori saat ini: {total_kalori} kal")
+    menu = int(input("Pilihan Anda : "))
 
-        if (jenisKelamin == 1) {
-            batasKalori = 2000;
-        } else {
-            batasKalori = 1500;
-        }
+    if menu == 1:
+        nama = input("Masukkan nama : ")
+        kalori = int(input("Masukkan kalori : "))
 
-        while (true) {
-            System.out.println("\nPilih Menu:\n1. Makan\n2. Buang\n3. Riwayat Makanan\n4. Keluar\nKalori saat ini: " + totalKalori + " kal");
-            System.out.print("Pilihan Anda : ");
-            int menu = scanner.nextInt();
-
-            if (menu == 1) {
-                System.out.print("Masukkan nama : ");
-                String nama = scanner.next();
-                System.out.print("Masukkan kalori : ");
-                int kalori = scanner.nextInt();
-
-                if (totalKalori + kalori <= batasKalori) {
-                    stack.push(nama, kalori);
-                    totalKalori += kalori;
-                    System.out.println("Data " + nama + " (" + kalori + " kal) disimpan!");
-                } else {
-                    System.out.println("Penambahan makanan dibatalkan, total kalori melebihi batas!");
-                }
-            } else if (menu == 2) {
-                int count = 0;
-                Makanan current = stack.top;
-                while (current != null) {
-                    current = current.next;
-                    count++;
-                }
-                int toBeRemoved = count / 2;
-                for (int i = 0; i < toBeRemoved; i++) {
-                    stack.pop();
-                    totalKalori -= stack.top.kalori;
-                }
-            } else if (menu == 3) {
-                System.out.println("Riwayat Makanan:");
-                stack.printHistory();
-            } else if (menu == 4) {
-                break;
-            }
-        }
-    }
-}
+        if total_kalori + kalori <= batas_kalori:
+            stack.push(nama, kalori)
+            total_kalori += kalori
+            print(f"Data {nama} ({kalori} kal) disimpan!")
+        else:
+            print("Penambahan makanan dibatalkan, total kalori melebihi batas!")
+    elif menu == 2:
+        count = 0
+        current = stack.top
+        while current:
+            current = current.next
+            count += 1
+        to_be_removed = count // 2
+        for _ in range(to_be_removed):
+            stack.pop()
+            total_kalori -= stack.top.kalori
+    elif menu == 3:
+        print("Riwayat Makanan:")
+        stack.print_history()
+    elif menu == 4:
+        break
